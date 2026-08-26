@@ -1,0 +1,21 @@
+data
+.env
+.env.local
+.env.*.local
+
+# Credenciales de Google Cloud (el JSON de la cuenta de servicio).
+# Aunque el JSON quede en la carpeta del proyecto, NUNCA viaja al deploy:
+# va en la variable GOOGLE_SERVICE_ACCOUNT_JSON del panel de Vercel.
+*service-account*.json
+*service_account*.json
+*-credentials.json
+credentials.json
+gcp-*.json
+client_secret*.json
+
+*.log
+# Solo capturas de pantalla sueltas en la raíz (las imágenes de public/img sí se suben)
+/*.png
+Dockerfile
+docker-compose.yml
+.dockerignore

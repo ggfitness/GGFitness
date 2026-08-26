@@ -1,0 +1,418 @@
+/* ==========================================================================
+   GG — Personal Trainer · Tema oscuro
+   Paleta tomada del logo: negro, rosa (H≈344°) y blanco.
+   ========================================================================== */
+
+:root {
+  --bg: #08080a;
+  --bg-2: #0e0e11;
+  --card: #141418;
+  --card-2: #1b1b20;
+  --text: #f8f8f8;          /* blanco del logo */
+  --muted: #9a949a;
+  --brand: #d8809a;         /* rosa nucleo del logo */
+  --brand-2: #f0b4c4;       /* rosa claro del logo */
+  --brand-3: #f9d4de;       /* rosa mas claro, para el relleno de botones */
+  --brand-rgb: 216, 128, 154;
+  --on-brand: #000000;      /* negro del logo; sobre rosa el blanco no contrasta */
+  --ok: #2ecc71;
+  --error: #ff6b81;         /* error de validacion; sobre el fondo oscuro contrasta */
+  --border: #262029;
+  --radius: 18px;
+  --font: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: 'Anton', 'Archivo Black', var(--font);
+  --shadow: 0 20px 50px -20px rgba(0,0,0,.7);
+  --glow: 0 0 60px -10px rgba(var(--brand-rgb),.45);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+
+.container { max-width: 1560px; margin: 0 auto; padding: 0 22px; }
+
+/* ---- Tipografía display ---- */
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  line-height: .95;
+}
+.grad {
+  background: linear-gradient(100deg, var(--brand), var(--brand-2));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+
+/* ---- Banner de oferta (arriba de todo) ---- */
+.offer-bar {
+  background: linear-gradient(90deg, var(--brand), var(--brand-2));
+  color: var(--on-brand); text-align: center;
+  font-weight: 800; font-size: .86rem; letter-spacing: .3px;
+  padding: 9px 16px;
+}
+
+/* ---- Navbar ---- */
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(8,8,10,.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav .container { display: flex; align-items: center; justify-content: space-between; height: 112px; }
+.logo { display: inline-flex; align-items: center; line-height: 0; }
+/* 96px: el logo manda en la barra, y la barra crece con el para que respire */
+.logo img { height: 96px; width: auto; display: block; }
+.nav-links { display: flex; gap: 26px; align-items: center; }
+/* :not(.btn) — sin esto la regla pisa el color y el peso de .btn (mas especifica que .btn) */
+.nav-links a:not(.btn) { color: var(--muted); font-weight: 600; font-size: .92rem; transition: color .15s; }
+.nav-links a:not(.btn):hover { color: var(--text); }
+.cart-link { position: relative; font-size: 1.15rem; }
+.cart-count {
+  position: absolute; top: -8px; right: -12px;
+  background: var(--brand-2); color: var(--on-brand); font-size: .68rem; font-weight: 800;
+  min-width: 18px; height: 18px; border-radius: 999px;
+  display: flex; align-items: center; justify-content: center; padding: 0 4px;
+}
+
+/* ---- Botones ---- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+  background: linear-gradient(120deg, var(--brand-2), var(--brand-3));
+  color: var(--on-brand); font-weight: 800; border: none; cursor: pointer;
+  padding: 15px 28px; border-radius: 999px; font-size: 1rem;
+  letter-spacing: .3px;
+  transition: transform .14s ease, box-shadow .14s ease, opacity .14s, filter .14s;
+  box-shadow: 0 10px 30px -10px rgba(var(--brand-rgb),.55);
+}
+.btn:hover { transform: translateY(-2px); filter: brightness(1.06); box-shadow: 0 16px 40px -12px rgba(var(--brand-rgb),.7); }
+.btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-ghost {
+  background: transparent; border: 1px solid var(--border); color: var(--text);
+  box-shadow: none;
+}
+.btn-ghost:hover { border-color: var(--brand); box-shadow: none; }
+/* Consulta por WhatsApp. En los planes a medida es el único camino de compra,
+   así que va sólido y en el verde de WhatsApp: se reconoce sin leerlo. */
+.btn-wa {
+  background: #25d366; color: #04240d; border: none;
+  box-shadow: 0 10px 30px -12px rgba(37,211,102,.5);
+}
+.btn-wa:hover { background: #2ee273; box-shadow: 0 16px 40px -14px rgba(37,211,102,.65); }
+/* El logo va como máscara y no como <img>: se pinta con currentColor y crece
+   con la tipografía del botón, así sirve igual en .btn y en .btn-sm. */
+.btn-wa::before {
+  content: ''; width: 1.2em; height: 1.2em; flex: none;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M17.472%2014.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94%201.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8%2012.8%200%200%200-.57-.01c-.198%200-.52.074-.792.372-.272.297-1.04%201.016-1.04%202.479%200%201.462%201.065%202.875%201.213%203.074.149.198%202.096%203.2%205.077%204.487.709.306%201.262.489%201.694.625.712.227%201.36.195%201.871.118.571-.085%201.758-.719%202.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421%207.403h-.004a9.87%209.87%200%200%201-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86%209.86%200%200%201-1.51-5.26c.001-5.45%204.436-9.884%209.888-9.884%202.64%200%205.122%201.03%206.988%202.898a9.825%209.825%200%200%201%202.893%206.994c-.003%205.45-4.437%209.884-9.885%209.884m8.413-18.297A11.815%2011.815%200%200%200%2012.05%200C5.495%200%20.16%205.335.157%2011.892c0%202.096.547%204.142%201.588%205.945L.057%2024l6.305-1.654a11.882%2011.882%200%200%200%205.683%201.448h.005c6.554%200%2011.89-5.335%2011.893-11.893A11.821%2011.821%200%200%200%2020.465%203.488%22%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M17.472%2014.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94%201.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8%2012.8%200%200%200-.57-.01c-.198%200-.52.074-.792.372-.272.297-1.04%201.016-1.04%202.479%200%201.462%201.065%202.875%201.213%203.074.149.198%202.096%203.2%205.077%204.487.709.306%201.262.489%201.694.625.712.227%201.36.195%201.871.118.571-.085%201.758-.719%202.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421%207.403h-.004a9.87%209.87%200%200%201-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86%209.86%200%200%201-1.51-5.26c.001-5.45%204.436-9.884%209.888-9.884%202.64%200%205.122%201.03%206.988%202.898a9.825%209.825%200%200%201%202.893%206.994c-.003%205.45-4.437%209.884-9.885%209.884m8.413-18.297A11.815%2011.815%200%200%200%2012.05%200C5.495%200%20.16%205.335.157%2011.892c0%202.096.547%204.142%201.588%205.945L.057%2024l6.305-1.654a11.882%2011.882%200%200%200%205.683%201.448h.005c6.554%200%2011.89-5.335%2011.893-11.893A11.821%2011.821%200%200%200%2020.465%203.488%22%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+}
+.btn-sm { padding: 10px 20px; font-size: .9rem; }
+.btn-block { width: 100%; }
+
+/* ---- Hero ---- */
+.hero {
+  position: relative; padding: 96px 0 80px; text-align: center; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(600px 340px at 50% -8%, rgba(var(--brand-rgb),.20), transparent 70%),
+    radial-gradient(500px 300px at 85% 20%, rgba(240,180,196,.09), transparent 70%);
+  pointer-events: none;
+}
+.hero .inner { position: relative; z-index: 1; }
+.hero h1 { font-size: clamp(2.1rem, 7.4vw, 5.4rem); margin-bottom: 22px; }
+.hero p.lead { color: var(--muted); font-size: clamp(1.05rem, 2.4vw, 1.3rem); max-width: 620px; margin: 0 auto 36px; }
+.hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+/* ---- Stats ---- */
+.stats {
+  display: flex; justify-content: center; gap: 46px; flex-wrap: wrap;
+  margin-top: 56px; padding-top: 36px; border-top: 1px solid var(--border);
+}
+.stat { text-align: center; }
+.stat .num { font-family: var(--font-display); font-size: 2.4rem; color: var(--text); line-height: 1; }
+.stat .num .grad { display: inline; }
+.stat .lbl { color: var(--muted); font-size: .82rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 6px; }
+
+/* ---- Secciones ---- */
+.section { padding: 84px 0; }
+/* El navbar es sticky (112px): sin esto el título queda tapado al saltar por ancla */
+section[id] { scroll-margin-top: 128px; }
+.section-head { text-align: center; max-width: 640px; margin: 0 auto 52px; }
+.section-tag { color: var(--brand); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-size: .82rem; }
+.section h2 { font-size: clamp(2rem, 5vw, 3.2rem); margin: 12px 0 14px; }
+.section .sub { color: var(--muted); font-size: 1.08rem; }
+
+/* ---- Grid de planes / productos ---- */
+.grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; align-items: stretch; }
+.product {
+  position: relative;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column;
+  transition: transform .18s ease, border-color .18s ease;
+}
+.product:hover { transform: translateY(-6px); border-color: rgba(var(--brand-rgb),.45); }
+.product.featured {
+  border-color: var(--brand);
+  box-shadow: var(--glow);
+  transform: scale(1.02);
+}
+.product.featured:hover { transform: scale(1.02) translateY(-6px); }
+.badge-top {
+  position: absolute; top: 14px; right: 14px;
+  background: var(--brand-2); color: var(--on-brand); font-weight: 800; font-size: .72rem;
+  padding: 5px 12px; border-radius: 999px; letter-spacing: .5px; z-index: 2;
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.product .thumb {
+  font-size: 4.4rem;
+  aspect-ratio: 3 / 2;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 30%, var(--card-2), var(--card));
+  border-bottom: 1px solid var(--border);
+}
+.product .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.product .body { padding: 26px 24px; display: flex; flex-direction: column; flex: 1; }
+.product h3 { font-size: 1.3rem; margin-bottom: 10px; font-weight: 800; }
+/* En los packs: el nombre va en mayuscula, con "PACK" blanco y el resto rosa.
+   Vale para la card de la grilla y para el titulo de la pagina de detalle. */
+.pack-name { text-transform: uppercase; }
+.pack-name .name-hl { color: var(--brand-2); }
+.product .desc { color: var(--muted); font-size: .94rem; flex: 1; margin-bottom: 20px; }
+.product .price { font-family: var(--font-display); font-size: 2.3rem; margin-bottom: 4px; }
+.product .price small { font-family: var(--font); font-size: .85rem; color: var(--muted); font-weight: 500; letter-spacing: 0; }
+.product .price-note { color: var(--muted); font-size: .82rem; margin-bottom: 20px; }
+.product[data-href] { cursor: pointer; }
+.product .thumb-link { display: block; }
+/* Un boton por fila, a lo ancho de la card. Lado a lado quedaban angostos y el
+   texto apretado, y ademas asi todas las cards se ven igual: las que compran
+   por la web y las que se consultan por WhatsApp. */
+.product-actions { display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
+/* El texto es largo: que no se parta entre el icono y la primera palabra */
+.btn-wa { white-space: nowrap; }
+
+/* ---- Aviso "combinable" dentro de la card del plan ---- */
+.combo-hint {
+  display: block; margin-bottom: 16px;
+  color: var(--brand-2); font-size: .8rem; font-weight: 700;
+  letter-spacing: .3px;
+}
+.combo-hint:hover { text-decoration: underline; }
+
+/* ---- Combos / promos por combinación ---- */
+.combos { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 22px; }
+.combo {
+  display: flex; flex-direction: column;
+  background: var(--card); border: 1px solid rgba(var(--brand-rgb),.3);
+  border-radius: var(--radius); padding: 26px 22px;
+}
+.combo-list { margin-bottom: 20px; flex: 1; }
+.combo-list li { font-size: .9rem; }
+.combo-prices { display: flex; align-items: baseline; gap: 10px; }
+.combo-prices .was { color: var(--muted); text-decoration: line-through; font-size: .95rem; }
+.combo-prices .now { font-family: var(--font-display); font-size: 1.9rem; }
+.combo-save { color: var(--brand-2); font-size: .85rem; font-weight: 700; margin: 4px 0 18px; }
+
+/* ---- Detalle de producto ---- */
+.back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-weight: 600; margin-bottom: 26px; }
+.back-link:hover { color: var(--brand); }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.check-list { list-style: none; display: grid; gap: 13px; }
+.check-list li { display: flex; gap: 12px; align-items: flex-start; color: var(--muted); }
+.check-list li b { color: var(--text); }
+/* Listas largas (ej: "Que incluye") en dos columnas, para que la tarjeta no se
+   estire a lo alto. column-count fluye de arriba a abajo, que es como se lee. */
+.check-list.cols-2 { display: block; column-count: 2; column-gap: 30px; }
+.check-list.cols-2 li { break-inside: avoid; margin-bottom: 13px; }
+.check-list.cols-2 li:last-child { margin-bottom: 0; }
+@media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+/* En el celular no entran dos columnas: vuelve a una sola */
+@media (max-width: 560px) { .check-list.cols-2 { column-count: 1; } }
+
+/* ---- Proceso 01-04 ---- */
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+.step-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 30px 24px; position: relative;
+}
+.step-card .n {
+  font-family: var(--font-display); font-size: 3rem; color: transparent;
+  -webkit-text-stroke: 1.5px var(--brand); line-height: 1; margin-bottom: 16px; display: block;
+}
+.step-card h3 { font-size: 1.15rem; margin-bottom: 8px; }
+.step-card p { color: var(--muted); font-size: .92rem; }
+
+/* ---- Beneficios ---- */
+.features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.feature { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 30px; }
+.feature .ic { font-size: 2.2rem; margin-bottom: 14px; }
+.feature h3 { margin-bottom: 8px; font-size: 1.15rem; }
+.feature p { color: var(--muted); font-size: .95rem; }
+
+/* ---- Sobre mí / trainer ---- */
+.about { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 46px; align-items: center; }
+.about .photo {
+  aspect-ratio: 4/5; border-radius: var(--radius); border: 1px solid var(--border);
+  background: radial-gradient(circle at 50% 35%, var(--card-2), var(--card));
+  display: flex; align-items: center; justify-content: center; font-size: 6rem;
+  overflow: hidden;
+}
+.about .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.about h2 { text-align: left; }
+.about .sub { text-align: left; }
+.about ul { list-style: none; margin-top: 22px; display: grid; gap: 12px; }
+.about li { display: flex; gap: 12px; align-items: flex-start; color: var(--muted); }
+.about li b { color: var(--text); }
+.check { color: var(--brand); font-weight: 900; }
+
+/* ---- FAQ acordeón ---- */
+.faq { max-width: 780px; margin: 0 auto; }
+.faq-item { border: 1px solid var(--border); border-radius: 14px; margin-bottom: 12px; overflow: hidden; background: var(--card); }
+.faq-q {
+  width: 100%; text-align: left; background: none; border: none; color: var(--text);
+  font-size: 1.05rem; font-weight: 700; padding: 20px 22px; cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center; gap: 14px;
+}
+.faq-q .ico { color: var(--brand); font-size: 1.4rem; transition: transform .2s; flex-shrink: 0; }
+.faq-item.open .faq-q .ico { transform: rotate(45deg); }
+.faq-a { max-height: 0; overflow: hidden; transition: max-height .25s ease; color: var(--muted); }
+.faq-a .inner { padding: 0 22px 20px; }
+.faq-item.open .faq-a { max-height: 240px; }
+
+/* ---- CTA final ---- */
+.cta {
+  text-align: center; border-radius: 28px; padding: 70px 30px; margin: 0 22px;
+  background:
+    radial-gradient(500px 260px at 50% 0%, rgba(var(--brand-rgb),.24), transparent 70%),
+    var(--card);
+  border: 1px solid var(--border);
+}
+.cta h2 { font-size: clamp(2rem, 5vw, 3.4rem); margin-bottom: 16px; }
+.cta p { color: var(--muted); font-size: 1.1rem; max-width: 520px; margin: 0 auto 30px; }
+
+/* ---- Carrito ---- */
+.cart-item {
+  display: flex; align-items: center; gap: 16px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px; margin-bottom: 14px;
+}
+.cart-item .emoji { font-size: 2.6rem; }
+.cart-item .info { flex: 1; }
+.cart-item .info h4 { margin-bottom: 4px; }
+.cart-item .info .u-price { color: var(--muted); font-size: .9rem; }
+.qty { display: flex; align-items: center; gap: 10px; }
+.qty button {
+  width: 34px; height: 34px; border-radius: 9px; border: 1px solid var(--border);
+  background: var(--card-2); color: var(--text); font-size: 1.15rem; cursor: pointer;
+}
+.qty button:hover { border-color: var(--brand); }
+.remove { color: var(--muted); cursor: pointer; background: none; border: none; font-size: 1.5rem; }
+.remove:hover { color: var(--brand); }
+
+.summary {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 26px; position: sticky; top: 92px;
+}
+.summary h3 { margin-bottom: 18px; }
+.summary .row { display: flex; justify-content: space-between; margin-bottom: 12px; color: var(--muted); }
+.summary .total { display: flex; justify-content: space-between; font-family: var(--font-display); font-size: 1.6rem; color: var(--text); border-top: 1px solid var(--border); padding-top: 16px; margin-top: 8px; }
+.cart-layout { display: grid; grid-template-columns: 1fr 370px; gap: 32px; align-items: start; }
+
+.field { margin-bottom: 15px; }
+.field label { display: block; font-size: .88rem; color: var(--muted); margin-bottom: 6px; font-weight: 600; }
+.field input, .field textarea {
+  width: 100%; padding: 13px 15px; border-radius: 11px;
+  border: 1px solid var(--border); background: var(--card-2); color: var(--text); font-size: 1rem;
+  font-family: var(--font);
+}
+.field textarea { min-height: 64px; resize: vertical; line-height: 1.5; }
+.field input:focus, .field textarea:focus { outline: none; border-color: var(--brand); }
+
+/* ---- Validacion de un campo ----
+   El mensaje va DEBAJO del input y queda a la vista mientras se corrige (un
+   toast desaparece justo cuando lo necesitas). Dos tonos:
+     .error -> hay que corregirlo para poder seguir; el borde tambien se marca.
+     .hint  -> sugerencia (ej: "quisiste decir gmail.com?"); no bloquea nada. */
+.field-msg { display: none; margin: 6px 0 0; font-size: .82rem; line-height: 1.45; }
+.field-msg.show { display: block; }
+.field-msg.error { color: var(--error); }
+.field-msg.hint { color: var(--brand-2); }
+.field input.invalid, .field input.invalid:focus { border-color: var(--error); }
+
+/* ---- Formulario de admisión (plan personalizado) ---- */
+.form-card { max-width: 720px; margin: 0 auto; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; }
+.form-group { margin-bottom: 26px; }
+.form-group:last-of-type { margin-bottom: 14px; }
+.form-group-title { display: flex; align-items: center; gap: 11px; font-weight: 800; font-size: 1.08rem; margin-bottom: 16px; }
+.form-step { flex-shrink: 0; width: 27px; height: 27px; border-radius: 50%; background: linear-gradient(135deg, var(--brand), var(--brand-2)); color: var(--on-brand); display: flex; align-items: center; justify-content: center; font-size: .85rem; font-weight: 800; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px 18px; }
+.form-grid .field { margin-bottom: 0; }
+.form-grid .field.full { grid-column: 1 / -1; }
+.form-foot { color: var(--muted); font-size: .82rem; text-align: center; margin-top: 16px; }
+@media (max-width: 560px) { .form-grid { grid-template-columns: 1fr; } }
+
+/* ---- Estados de resultado ---- */
+.result { text-align: center; padding: 96px 0; max-width: 580px; margin: 0 auto; }
+.result .big { font-size: 4.8rem; margin-bottom: 22px; }
+.result h1 { margin-bottom: 14px; font-size: 2.4rem; }
+.result p { color: var(--muted); font-size: 1.12rem; margin-bottom: 30px; }
+
+.empty { text-align: center; color: var(--muted); padding: 60px 0; }
+
+/* ---- Footer ---- */
+.footer { border-top: 1px solid var(--border); padding: 46px 0; margin-top: 40px; }
+.footer .top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; margin-bottom: 26px; }
+.footer .logo img { height: 84px; }
+.footer .links { display: flex; gap: 22px; flex-wrap: wrap; }
+.footer .links a { color: var(--muted); font-size: .92rem; }
+.footer .links a:hover { color: var(--text); }
+.footer .copy { color: var(--muted); font-size: .85rem; text-align: center; border-top: 1px solid var(--border); padding-top: 24px; }
+
+/* ---- Toast ---- */
+.toast {
+  position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%);
+  background: var(--card-2); border: 1px solid var(--brand); color: var(--text);
+  padding: 14px 24px; border-radius: 12px; font-weight: 700; z-index: 100;
+  opacity: 0; transition: opacity .2s, transform .2s; pointer-events: none;
+  box-shadow: var(--shadow);
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(-6px); }
+
+/* ---- Responsive ---- */
+/* Escalera de los planes: 4 -> 3 -> 2 -> 1 */
+@media (max-width: 1100px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 900px) {
+  .steps { grid-template-columns: repeat(2, 1fr); }
+  .features { grid-template-columns: 1fr; }
+  .about { grid-template-columns: 1fr; }
+  .about .photo { max-width: 340px; margin: 0 auto; }
+  .about h2, .about .sub { text-align: center; }
+  .grid { grid-template-columns: repeat(2, 1fr); }
+  .product.featured { transform: none; }
+  .cart-layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .steps { grid-template-columns: 1fr; }
+  .grid { grid-template-columns: 1fr; }
+  /* En pantalla chica la barra no puede comerse tanto alto */
+  .nav .container { height: 88px; }
+  .logo img { height: 72px; }
+  .nav-links { gap: 14px; }
+  .nav-links .hide-sm { display: none; }
+  .stats { gap: 28px; }
+}

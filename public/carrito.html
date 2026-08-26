@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carrito — GG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="icon" href="/img/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" href="/img/favicon-32.png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="/img/apple-touch-icon.png" />
+</head>
+<body>
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="logo"><img src="/img/brand-logo.png" alt="GG" /></a>
+      <div class="nav-links">
+        <a href="/productos.html">Productos</a>
+        <a href="/carrito.html" class="cart-link">🛒<span class="cart-count">0</span></a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="display" style="text-align:left; margin-bottom:30px; font-size:2.4rem;">Tu <span class="grad">carrito</span></h2>
+      <div class="cart-layout">
+        <div id="items"></div>
+
+        <div class="summary">
+          <h3>Resumen</h3>
+          <div class="row"><span>Subtotal</span><span id="subtotal">$0</span></div>
+          <div id="discount-rows"></div>
+          <div class="total"><span>Total</span><span id="total">$0</span></div>
+          <div id="promo-hint"></div>
+
+          <div style="margin:22px 0 6px;">
+            <div class="field">
+              <label for="name">Tu nombre</label>
+              <input id="name" type="text" placeholder="Ej: María López"
+                     autocomplete="name" aria-describedby="name-msg" />
+              <p class="field-msg" id="name-msg" role="alert"></p>
+            </div>
+            <div class="field">
+              <label for="email">Tu email (donde recibís el material)</label>
+              <input id="email" type="email" placeholder="tucorreo@mail.com"
+                     autocomplete="email" inputmode="email" spellcheck="false"
+                     aria-describedby="email-msg" />
+              <p class="field-msg" id="email-msg" role="alert"></p>
+            </div>
+          </div>
+
+          <button class="btn btn-block" id="pay">Pagar con Mercado Pago</button>
+          <p style="color:var(--muted); font-size:.82rem; text-align:center; margin-top:12px;">
+            Pago seguro. Recibís tu material por mail al aprobarse.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="/js/email.js"></script>
+  <script src="/js/cart.js"></script>
+  <script>
+    function render() {
+      const items = Cart.get();
+      const box = document.getElementById('items');
+      if (!items.length) {
+        box.innerHTML = `<div class="empty">
+          <p style="font-size:3rem;">🛒</p>
+          <p>Tu carrito está vacío.</p>
+          <a href="/productos.html" class="btn" style="margin-top:16px;">Ver productos</a>
+        </div>`;
+        document.getElementById('pay').disabled = true;
+      } else {
+        box.innerHTML = items.map((i) => `
+          <div class="cart-item">
+            <div class="emoji">${i.image || '🏋️'}</div>
+            <div class="info">
+              <h4>${i.name}</h4>
+              <div class="u-price">${money(i.price)} c/u</div>
+            </div>
+            <div class="qty">
+              <button data-act="dec" data-id="${i.id}">−</button>
+              <span>${i.qty}</span>
+              <button data-act="inc" data-id="${i.id}">+</button>
+            </div>
+            <strong>${money(i.price * i.qty)}</strong>
+            <button class="remove" data-act="rm" data-id="${i.id}" title="Quitar">×</button>
+          </div>
+        `).join('');
+        document.getElementById('pay').disabled = false;
+      }
+      // Subtotal/descuento/total los calcula el servidor (fuente única de verdad)
+      updateSummary();
+
+      box.querySelectorAll('button[data-act]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const id = btn.dataset.id;
+          const item = Cart.get().find((i) => i.id === id);
+          if (btn.dataset.act === 'inc') Cart.setQty(id, item.qty + 1);
+          if (btn.dataset.act === 'dec') Cart.setQty(id, item.qty - 1);
+          if (btn.dataset.act === 'rm') Cart.remove(id);
+          render();
+        });
+      });
+    }
+
+    // Pide al servidor el resumen (subtotal, descuentos por combo, total) y lo muestra.
+    async function updateSummary() {
+      const items = Cart.get().map((i) => ({ id: i.id, qty: i.qty }));
+      const subEl = document.getElementById('subtotal');
+      const totEl = document.getElementById('total');
+      const discEl = document.getElementById('discount-rows');
+      const hintEl = document.getElementById('promo-hint');
+
+      // Valor por defecto (por si falla la red): subtotal = total, sin descuento.
+      subEl.textContent = money(Cart.total());
+      totEl.textContent = money(Cart.total());
+      discEl.innerHTML = '';
+
+      if (!items.length) { hintEl.innerHTML = ''; return; }
+
+      try {
+        const res = await fetch('/api/quote', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ items }),
+        });
+        if (!res.ok) return;
+        const q = await res.json();
+        subEl.textContent = money(q.subtotal);
+        totEl.textContent = money(q.total);
+        discEl.innerHTML = (q.applied || [])
+          .map(
+            (d) => `<div class="row" style="color:#1a9e5f;font-weight:600;">
+              <span>◆ ${d.label}</span><span>−${money(d.amount)}</span></div>`
+          )
+          .join('');
+      } catch { /* nos quedamos con el valor por defecto */ }
+
+      showPromoHints(items);
+    }
+
+    // Sugerencias: promos que el cliente casi arma (para incentivar sumar productos).
+    async function showPromoHints(items) {
+      const hintEl = document.getElementById('promo-hint');
+      hintEl.innerHTML = '';
+      try {
+        const [rulesRes, prodsRes] = await Promise.all([
+          fetch('/api/discounts'),
+          fetch('/api/products'),
+        ]);
+        if (!rulesRes.ok || !prodsRes.ok) return;
+        const rules = await rulesRes.json();
+        const products = await prodsRes.json();
+        const nameById = Object.fromEntries(products.map((p) => [p.id, p.name]));
+        const inCart = new Set(items.map((i) => i.id));
+
+        // Promos donde falta 1 solo producto para completarlas.
+        const almost = rules
+          .map((r) => ({ r, faltan: (r.allOf || []).filter((id) => !inCart.has(id)) }))
+          .filter((x) => x.faltan.length === 1 && x.r.allOf.some((id) => inCart.has(id)));
+
+        if (!almost.length) return;
+        hintEl.innerHTML = almost
+          .map((x) => {
+            const off = x.r.percentOff ? `${x.r.percentOff}% OFF` : `descuento`;
+            const falta = nameById[x.faltan[0]] || 'otro pack';
+            return `<div style="margin-top:12px;padding:12px 14px;background:rgba(var(--brand-rgb),.10);border:1px solid rgba(var(--brand-rgb),.35);border-radius:10px;font-size:.85rem;color:var(--brand-2);">
+              💡 Sumá <strong>${falta}</strong> y llevás <strong>${off}</strong> (${x.r.label}).
+            </div>`;
+          })
+          .join('');
+      } catch { /* las sugerencias son opcionales */ }
+    }
+
+    // ------------------------------------------------------------------
+    //  Validación del formulario, con el mensaje debajo del campo
+    // ------------------------------------------------------------------
+    //  El email es la dirección de ENTREGA del material: si está mal, paga y no
+    //  recibe nada. Así que en vez de un "email inválido" al apretar Pagar, el
+    //  mensaje dice qué corregir (falta el @, sobra un carácter, etc.) y aparece
+    //  apenas sale del campo.
+    //
+    //  emailProblem / emailHint vienen de /js/email.js, el MISMO archivo que
+    //  usa el servidor: el mensaje que se ve acá es el que se aplica allá.
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const nameMsg = document.getElementById('name-msg');
+    const emailMsg = document.getElementById('email-msg');
+
+    // Mientras escribe por primera vez no lo interrumpimos: los mensajes
+    // aparecen recién cuando sale del campo (o cuando aprieta Pagar).
+    const tocado = { name: false, email: false };
+
+    function pintar(input, msgEl, texto, tipo) {
+      msgEl.textContent = texto || '';
+      msgEl.className = 'field-msg' + (texto ? ' show ' + tipo : '');
+      // 'hint' es una sugerencia, no un error: el campo no se marca en rojo.
+      const esError = !!texto && tipo === 'error';
+      input.classList.toggle('invalid', esError);
+      input.setAttribute('aria-invalid', esError ? 'true' : 'false');
+    }
+
+    function revisarNombre({ forzar = false } = {}) {
+      if (!forzar && !tocado.name) return true;
+      const ok = !!nameInput.value.trim();
+      pintar(nameInput, nameMsg, ok ? '' : 'Escribí tu nombre.', 'error');
+      return ok;
+    }
+
+    function revisarEmail({ forzar = false } = {}) {
+      if (!forzar && !tocado.email) return true;
+      const problema = emailProblem(emailInput.value);
+      if (problema) {
+        pintar(emailInput, emailMsg, problema, 'error');
+        return false;
+      }
+      // Sin error: puede haber una sugerencia por un error de tipeo típico
+      // (ej: gmail.con). No bloquea: solo avisa.
+      pintar(emailInput, emailMsg, emailHint(emailInput.value) || '', 'hint');
+      return true;
+    }
+
+    nameInput.addEventListener('blur', () => { tocado.name = true; revisarNombre(); });
+    emailInput.addEventListener('blur', () => { tocado.email = true; revisarEmail(); });
+    // Al corregir, el mensaje se actualiza en el momento (y desaparece solo).
+    nameInput.addEventListener('input', () => revisarNombre());
+    emailInput.addEventListener('input', () => revisarEmail());
+
+    document.getElementById('pay').addEventListener('click', async () => {
+      tocado.name = true;
+      tocado.email = true;
+      const nombreOk = revisarNombre({ forzar: true });
+      const emailOk = revisarEmail({ forzar: true });
+      if (!nombreOk || !emailOk) {
+        // Foco en el primer campo con problema, para que pueda corregir de una.
+        (!nombreOk ? nameInput : emailInput).focus();
+        return;
+      }
+
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
+
+      const btn = document.getElementById('pay');
+      btn.disabled = true;
+      btn.textContent = 'Redirigiendo…';
+
+      try {
+        const res = await fetch('/api/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            customer: { name, email },
+            items: Cart.get().map((i) => ({ id: i.id, qty: i.qty })),
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          // Si el servidor señala un campo, el mensaje va DEBAJO de ese campo
+          // (queda a la vista mientras corrige, a diferencia del toast).
+          const campo = data.field === 'name' ? nameInput : data.field === 'email' ? emailInput : null;
+          if (campo) {
+            pintar(campo, campo === nameInput ? nameMsg : emailMsg, data.error, 'error');
+            campo.focus();
+            btn.disabled = false;
+            btn.textContent = 'Pagar con Mercado Pago';
+            return;
+          }
+          throw new Error(data.error || 'Error');
+        }
+        // Guardamos para vaciar el carrito al volver con pago aprobado
+        localStorage.setItem('pt_last_order', data.orderId);
+        window.location.href = data.checkoutUrl;
+      } catch (e) {
+        toast('❌ ' + e.message);
+        btn.disabled = false;
+        btn.textContent = 'Pagar con Mercado Pago';
+      }
+    });
+
+    // Carritos viejos: si alguien agrego un plan personalizado antes de que
+    // pasaran a coordinarse por WhatsApp, quedaria trabado sin poder pagar
+    // (el servidor lo rechaza). Se limpia solo y se avisa por que.
+    async function limpiarSoloConsulta() {
+      const enCarrito = Cart.get();
+      if (!enCarrito.length) return;
+      try {
+        const productos = await fetch('/api/products').then((r) => r.json());
+        const soloConsulta = new Set(productos.filter((p) => p.soloConsulta).map((p) => p.id));
+        const sacados = enCarrito.filter((i) => soloConsulta.has(i.id));
+        if (!sacados.length) return;
+        sacados.forEach((i) => Cart.remove(i.id));
+        render();
+        toast(`${sacados[0].name} se coordina por WhatsApp: lo sacamos del carrito`);
+      } catch { /* si falla la red, el checkout igual lo frena con su mensaje */ }
+    }
+
+    render();
+    limpiarSoloConsulta();
+  </script>
+</body>
+</html>

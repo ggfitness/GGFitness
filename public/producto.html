@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plan — GG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="icon" href="/img/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" href="/img/favicon-32.png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="/img/apple-touch-icon.png" />
+</head>
+<body>
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="logo"><img src="/img/brand-logo.png" alt="GG" /></a>
+      <div class="nav-links">
+        <a href="/#planes" class="hide-sm">Planes</a>
+        <a href="/#faq" class="hide-sm">FAQ</a>
+        <a href="/carrito.html" class="cart-link">🛒<span class="cart-count">0</span></a>
+      </div>
+    </div>
+  </nav>
+
+  <div id="detail">
+    <section class="section"><div class="container"><p class="empty">Cargando…</p></div></section>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy">© 2026 GG — Personal Trainer. Todos los derechos reservados.</div>
+    </div>
+  </footer>
+
+  <script src="/js/cart.js"></script>
+  <script>
+    const id = new URLSearchParams(location.search).get('id');
+
+    function notFound() {
+      return `<section class="section"><div class="container">
+        <div class="result">
+          <div class="big">🤔</div>
+          <h1>Plan no encontrado</h1>
+          <p>Puede que ya no esté disponible.</p>
+          <a href="/#planes" class="btn">Ver todos los planes</a>
+        </div>
+      </div></section>`;
+    }
+
+    function list(items) {
+      return (items || []).map((t) => `<li><span class="check">✓</span><span>${t}</span></li>`).join('');
+    }
+
+    // Precio con moneda (ARS/USD) y período (ej: /mes)
+    function priceHtml(p) {
+      const amount = Number(p.price).toLocaleString('es-AR');
+      const main = p.currency === 'USD' ? `US$ ${amount}` : `$${amount}`;
+      const unit = p.period ? `/${p.period}` : (p.currency === 'USD' ? 'USD' : 'ARS');
+      return `${main} <small style="font-family:var(--font); font-size:.9rem; color:var(--muted); font-weight:500;">${unit}</small>`;
+    }
+
+    // Botón de consulta directa al chat (solo si el producto lo pide y hay número configurado)
+    function waBtn(p, extraClass = '') {
+      if (!p.whatsappUrl) return '';
+      return `<a class="btn btn-wa ${extraClass}" href="${p.whatsappUrl}" target="_blank" rel="noopener">Consultar por WhatsApp</a>`;
+    }
+
+    function render(p) {
+      // Los personalizados no se cobran por la web: se arranca hablando con la
+      // trainer y el pago se coordina por fuera. Único botón: WhatsApp.
+      const note = p.soloConsulta
+        ? 'Escribime y coordinamos el plan y el pago'
+        : (p.period ? `Se renueva cada ${p.period}` : 'Pago único · Acceso inmediato al aprobarse el pago');
+      const comprar = p.soloConsulta
+        ? ''
+        : `<button class="btn" data-buy>Comprar ahora →</button>`;
+      const topActions = p.soloConsulta
+        // Si falta WHATSAPP_NUMBER no hay link, y sin este aviso la página
+        // quedaría sin ninguna salida (el servidor lo avisa al arrancar).
+        ? waBtn(p) || '<p class="sub" style="text-align:left;">Escribime para coordinar este plan.</p>'
+        : `${comprar}
+        <button class="btn btn-ghost" data-add>Agregar al carrito 🛒</button>
+        ${waBtn(p)}`;
+      const bottom = `
+        <div style="text-align:center; margin-top:48px; display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+          ${comprar}
+          ${waBtn(p)}
+        </div>`;
+      return `
+      <section class="section">
+        <div class="container">
+          <a href="/#planes" class="back-link">← Volver a los planes</a>
+          <div class="about">
+            <div class="photo">${p.photo ? `<img src="${p.photo}" alt="${p.name}" />` : (p.image || '🏋️')}</div>
+            <div>
+              <span class="section-tag">Plan</span>
+              <h1 class="display" style="margin:12px 0 14px; font-size:clamp(2rem,5vw,3.4rem);">${formatName(p.name)}</h1>
+              <p class="sub" style="text-align:left;">${p.tagline || p.description || ''}</p>
+              <div class="price" style="font-family:var(--font-display); font-size:2.6rem; margin:20px 0 4px;">${priceHtml(p)}</div>
+              <div class="price-note" style="color:var(--muted); margin-bottom:24px;">${note}</div>
+              <div class="hero-actions" style="justify-content:flex-start;">
+                ${topActions}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" style="background:var(--bg-2); padding-top:64px;">
+        <div class="container">
+          ${p.details ? `
+          <div class="section-head" style="margin-bottom:40px;">
+            <span class="section-tag">Para qué sirve</span>
+            <h2 class="display" style="font-size:clamp(1.8rem,4vw,2.6rem);">¿Qué vas a <span class="grad">lograr?</span></h2>
+            <p class="sub">${p.details}</p>
+          </div>` : ''}
+
+          <div class="two-col">
+            <div class="feature">
+              <div class="ic">✅</div>
+              <h3 style="margin-bottom:16px;">Qué incluye</h3>
+              <ul class="check-list${(p.includes || []).length > 6 ? ' cols-2' : ''}">${list(p.includes)}</ul>
+            </div>
+            <div class="feature">
+              <div class="ic">🎯</div>
+              <h3 style="margin-bottom:16px;">Para quién es</h3>
+              <ul class="check-list">${list(p.forWho)}</ul>
+            </div>
+          </div>
+
+          <div style="margin-top:48px;">${bottom}</div>
+        </div>
+      </section>`;
+    }
+
+    async function load() {
+      const box = document.getElementById('detail');
+      if (!id) { box.innerHTML = notFound(); return; }
+      try {
+        const res = await fetch('/api/products/' + encodeURIComponent(id));
+        if (!res.ok) { box.innerHTML = notFound(); return; }
+        const p = await res.json();
+        document.title = p.name + ' — GG';
+        box.innerHTML = render(p);
+
+        box.querySelectorAll('[data-add]').forEach((b) =>
+          b.addEventListener('click', () => { Cart.add(p); toast(`✅ "${p.name}" agregado al carrito`); })
+        );
+        box.querySelectorAll('[data-buy]').forEach((b) =>
+          b.addEventListener('click', () => { Cart.add(p); window.location.href = '/carrito.html'; })
+        );
+      } catch {
+        box.innerHTML = notFound();
+      }
+    }
+    load();
+  </script>
+</body>
+</html>

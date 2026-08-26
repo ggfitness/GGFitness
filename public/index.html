@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GG — Entrená con resultados reales</title>
+  <meta name="description" content="Planes de entrenamiento y nutrición personalizados. Comprá online, pagá con Mercado Pago y recibí tu material al instante." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="icon" href="/img/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" href="/img/favicon-32.png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="/img/apple-touch-icon.png" />
+</head>
+<body>
+  <div class="offer-bar">💗 OFERTA POR TIEMPO LIMITADO · Cupos limitados este mes — ¡Empezá hoy!</div>
+
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="logo"><img src="/img/brand-logo.png" alt="GG" /></a>
+      <div class="nav-links">
+        <a href="#planes" class="hide-sm">Planes</a>
+        <a href="#como" class="hide-sm">Cómo funciona</a>
+        <a href="#faq" class="hide-sm">FAQ</a>
+        <a href="/carrito.html" class="cart-link">🛒<span class="cart-count">0</span></a>
+        <a href="#planes" class="btn btn-sm">Empezar</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="container inner">
+      <h1 class="display">Transformá tu cuerpo<br /><span class="grad">sin excusas</span></h1>
+      <p class="lead">Planes de entrenamiento y nutrición diseñados para vos. Comprás online, pagás seguro con Mercado Pago y recibís tu material al instante en tu mail.</p>
+      <div class="hero-actions">
+        <a href="#planes" class="btn">Ver planes →</a>
+        <a href="#como" class="btn btn-ghost">Cómo funciona</a>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><div class="num grad">+200</div><div class="lbl">Alumnos entrenados</div></div>
+        <div class="stat"><div class="num grad">4.9★</div><div class="lbl">Valoración media</div></div>
+        <div class="stat"><div class="num grad">100%</div><div class="lbl">Online y a tu ritmo</div></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- PLANES -->
+  <section class="section" id="planes">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag">Planes</span>
+        <h2 class="display">Elegí tu <span class="grad">transformación</span></h2>
+      </div>
+      <div class="grid" id="grid">
+        <p class="empty">Cargando planes…</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMBOS -->
+  <section class="section" id="combos" style="padding-top:0;">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="display">Ahorrá <span class="grad">comprando junto</span></h2>
+        <p class="sub">El descuento se aplica solo al llegar al carrito, sin cupones ni códigos.</p>
+      </div>
+      <div class="combos" id="combos-grid"></div>
+    </div>
+  </section>
+
+  <!-- CÓMO FUNCIONA -->
+  <section class="section" id="como" style="background:var(--bg-2);">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag">Simple y rápido</span>
+        <h2 class="display">Cómo <span class="grad">funciona</span></h2>
+        <p class="sub">De la compra a entrenar, en minutos.</p>
+      </div>
+      <div class="steps">
+        <div class="step-card"><span class="n">01</span><h3>Elegís tu plan</h3><p>Mirá los planes y agregá al carrito el que va con tu objetivo.</p></div>
+        <div class="step-card"><span class="n">02</span><h3>Pagás seguro</h3><p>Checkout con Mercado Pago: tarjeta, débito o dinero en cuenta.</p></div>
+        <div class="step-card"><span class="n">03</span><h3>Pago aprobado</h3><p>Al instante se confirma tu compra y se activa tu acceso.</p></div>
+        <div class="step-card"><span class="n">04</span><h3>Recibís el material</h3><p>El acceso te llega al mail al instante, listo para empezar hoy mismo.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BENEFICIOS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="display">Pensado para <span class="grad">resultados</span></h2>
+      </div>
+      <div class="features">
+        <div class="feature"><div class="ic">🎯</div><h3>100% personalizado</h3><p>Cada plan se adapta a tu nivel, objetivos y el tiempo que tenés para entrenar.</p></div>
+        <div class="feature"><div class="ic">📱</div><h3>Desde donde quieras</h3><p>En casa o en el gym. Videos y guías fáciles de seguir desde el celular.</p></div>
+        <div class="feature"><div class="ic">⚡</div><h3>Acceso inmediato</h3><p>Apenas se aprueba el pago, tu material llega solo a tu correo.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOBRE MÍ -->
+  <!--<section class="section" id="sobre-mi">
+    <div class="container">
+      <div class="about">
+        <div class="photo">🏋️‍♀️</div>
+        <div>
+          <span class="section-tag">Tu entrenadora</span>
+          <h2 class="display" style="margin-top:12px;">Entrená con <span class="grad">alguien que te guía</span></h2>
+          <p class="sub">Soy personal trainer certificada y ayudo a personas como vos a lograr su mejor versión, sin dietas imposibles ni rutinas eternas.</p>
+          <ul>
+            <li><span class="check">✓</span><span><b>Planes a tu medida</b> según tu nivel y objetivos.</span></li>
+            <li><span class="check">✓</span><span><b>Seguimiento cercano</b> para que no abandones a mitad de camino.</span></li>
+            <li><span class="check">✓</span><span><b>Método simple</b> que se adapta a tu vida real.</span></li>
+          </ul>
+          <div style="margin-top:28px;"><a href="#planes" class="btn">Quiero empezar →</a></div>
+        </div>
+      </div>
+    </div>
+  </section>-->
+
+  <!-- FAQ -->
+  <section class="section" id="faq" style="background:var(--bg-2);">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="display">Preguntas <span class="grad">frecuentes</span></h2>
+      </div>
+      <div class="faq">
+        <div class="faq-item"><button class="faq-q">¿Cómo recibo el material después de pagar? <span class="ico">+</span></button><div class="faq-a"><div class="inner">Apenas Mercado Pago aprueba tu pago, te llega automáticamente un mail con el acceso a tu material (rutinas, videos y guías). No tenés que esperar nada. En los planes personalizados es distinto: ahí te contactamos dentro de las 48 horas para armar tu plan a medida.</div></div></div>
+        <div class="faq-item"><button class="faq-q">¿Cómo funciona la app? <span class="ico">+</span></button><div class="faq-a"><div class="inner">En los planes personalizados el seguimiento se hace desde la app. Ahí tenés tus rutinas en el celular, vas marcando cada serie con las repeticiones y el peso, y ves tu progreso entrenamiento a entrenamiento. Del otro lado yo veo lo mismo, así ajusto el plan según cómo venís. El acceso te lo paso cuando arrancamos.</div></div></div>
+        <div class="faq-item"><button class="faq-q">¿Necesito ir a un gimnasio? <span class="ico">+</span></button><div class="faq-a"><div class="inner">No. Los planes se adaptan para entrenar en casa o en el gym, con o sin equipamiento. Vos elegís.</div></div></div>
+        <div class="faq-item"><button class="faq-q">¿Qué medios de pago puedo usar? <span class="ico">+</span></button><div class="faq-a"><div class="inner">Todos los de Mercado Pago: tarjeta de crédito, débito, o dinero disponible en tu cuenta. El pago es 100% seguro.</div></div></div>
+        <div class="faq-item"><button class="faq-q">¿Sirve si recién empiezo? <span class="ico">+</span></button><div class="faq-a"><div class="inner">¡Totalmente! Hay planes para todos los niveles y cada ejercicio viene explicado en video paso a paso.</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="section">
+    <div class="container">
+      <div class="cta">
+        <h2 class="display">Es momento de <span class="grad">empezar</span></h2>
+        <p>Elegí tu plan hoy y recibí todo lo que necesitás para transformar tu cuerpo.</p>
+        <a href="#planes" class="btn">Ver planes →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="top">
+        <a href="/" class="logo"><img src="/img/brand-logo.png" alt="GG" /></a>
+        <div class="links">
+          <a href="#planes">Planes</a>
+          <a href="#como">Cómo funciona</a>
+          <a href="#faq">FAQ</a>
+          <a href="/carrito.html">Carrito</a>
+        </div>
+      </div>
+      <div class="copy">© 2026 GG — Personal Trainer. Todos los derechos reservados.</div>
+    </div>
+  </footer>
+
+  <script src="/js/cart.js"></script>
+  <script>
+    // Cargar planes y combos desde la API (el del medio se muestra destacado)
+    async function loadPlans() {
+      const grid = document.getElementById('grid');
+      try {
+        const [products, rules] = await Promise.all([
+          fetch('/api/products').then((r) => r.json()),
+          // Si las promos fallan, la grilla igual se muestra.
+          fetch('/api/discounts').then((r) => r.json()).catch(() => []),
+        ]);
+        renderProducts(products, grid);
+        renderCombos(rules, document.getElementById('combos-grid'), products);
+      } catch { grid.innerHTML = '<p class="empty">Error cargando los planes.</p>'; }
+    }
+    loadPlans();
+
+    // FAQ acordeón
+    document.querySelectorAll('.faq-q').forEach((q) => {
+      q.addEventListener('click', () => q.parentElement.classList.toggle('open'));
+    });
+  </script>
+</body>
+</html>

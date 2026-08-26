@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Planes — GG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="icon" href="/img/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" href="/img/favicon-32.png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="/img/apple-touch-icon.png" />
+</head>
+<body>
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="logo"><img src="/img/brand-logo.png" alt="GG" /></a>
+      <div class="nav-links">
+        <a href="/#como" class="hide-sm">Cómo funciona</a>
+        <a href="/#faq" class="hide-sm">FAQ</a>
+        <a href="/carrito.html" class="cart-link">🛒<span class="cart-count">0</span></a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag">Planes</span>
+        <h2 class="display">Elegí tu <span class="grad">plan</span></h2>
+        <p class="sub">Empezá hoy tu transformación. Acceso inmediato al aprobarse el pago.</p>
+      </div>
+      <div class="grid" id="grid">
+        <p class="empty">Cargando planes…</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy">© 2026 GG — Personal Trainer. Todos los derechos reservados.</div>
+    </div>
+  </footer>
+
+  <script src="/js/cart.js"></script>
+  <script>
+    async function load() {
+      const grid = document.getElementById('grid');
+      try {
+        const products = await (await fetch('/api/products')).json();
+        renderProducts(products, grid);
+      } catch { grid.innerHTML = '<p class="empty">Error cargando planes.</p>'; }
+    }
+    load();
+  </script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>¡Pago aprobado! — GG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="icon" href="/img/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" href="/img/favicon-32.png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="/img/apple-touch-icon.png" />
+</head>
+<body>
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="logo"><img src="/img/brand-logo.png" alt="GG" /></a>
+      <div class="nav-links"><a href="/productos.html">Productos</a></div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="result" id="result">
+      <div class="big">⏳</div>
+      <h1>Confirmando tu pago…</h1>
+      <p>Un segundo por favor.</p>
+    </div>
+  </div>
+
+  <script src="/js/cart.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+
+    // Mercado Pago manda "null" como texto cuando un parámetro no aplica.
+    const param = (nombre) => {
+      const v = params.get(nombre);
+      return v && v !== 'null' && v !== 'undefined' ? v : null;
+    };
+
+    // El id de la orden lo ponemos nosotros en la back_url, pero MP también
+    // devuelve external_reference: si por algo se pierde el nuestro, sirve igual.
+    const orderId = param('order') || param('external_reference');
+    const demo = param('demo');
+    // Según el flujo, MP devuelve el id del pago como payment_id o collection_id.
+    const paymentId = param('payment_id') || param('collection_id');
+
+    const box = document.getElementById('result');
+    const espera = (ms) => new Promise((r) => setTimeout(r, ms));
+
+    function exito() {
+      Cart.clear();
+      localStorage.removeItem('pt_last_order');
+      box.innerHTML = `
+        <div class="big">🎉</div>
+        <h1>¡Pago aprobado!</h1>
+        <p>📩 Te enviamos un mail con <strong>el acceso a tu material</strong>. Revisá tu casilla (y la carpeta de spam, por si acaso). Si compraste un plan personalizado, te contactamos para coordinarlo. ¡Gracias por tu compra!</p>
+        <a href="/productos.html" class="btn">Seguir viendo planes</a>`;
+    }
+
+    function enRevision() {
+      box.innerHTML = `
+        <div class="big">⌛</div>
+        <h1>Pago en revisión</h1>
+        <p>Estamos verificando tu pago. Apenas Mercado Pago lo acredite, recibís el material por mail automáticamente — no hace falta que hagas nada.</p>
+        <a href="/" class="btn btn-ghost">Volver al inicio</a>`;
+    }
+
+    function rechazado() {
+      box.innerHTML = `
+        <div class="big">❌</div>
+        <h1>El pago no se aprobó</h1>
+        <p>Mercado Pago rechazó el pago, así que no se te cobró nada. Podés intentar de nuevo con otro medio de pago.</p>
+        <a href="/carrito.html" class="btn">Volver al carrito</a>`;
+    }
+
+    function devuelto() {
+      box.innerHTML = `
+        <div class="big">↩️</div>
+        <h1>Este pago fue devuelto</h1>
+        <p>El pago de esta compra se devolvió, así que el acceso al material ya no está activo. Si es un error, escribinos y lo resolvemos.</p>
+        <a href="/" class="btn btn-ghost">Volver al inicio</a>`;
+    }
+
+    // Confirma el pago contra el servidor.
+    //
+    // Por qué reintenta: cuando se paga en efectivo o Mercado Pago demora unos
+    // segundos en acreditar, la primera consulta devuelve "pendiente" y el
+    // comprador vería "en revisión" para una compra que se aprueba dos segundos
+    // después. Se reintenta unas pocas veces, con esperas crecientes, y recién
+    // ahí se muestra el mensaje de espera.
+    async function confirmar(intento = 1) {
+      const MAX_INTENTOS = 4;
+      try {
+        const res = await fetch(`/api/orders/${encodeURIComponent(orderId)}/confirm`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ demo, payment_id: paymentId }),
+        });
+        const data = await res.json().catch(() => ({}));
+
+        if (data.status === 'paid' || data.status === 'delivered') return exito();
+        if (data.status === 'refunded') return devuelto();
+        if (data.paymentStatus === 'rejected' || data.paymentStatus === 'cancelled') {
+          return rechazado();
+        }
+
+        if (intento < MAX_INTENTOS) {
+          await espera(1500 * intento);
+          return confirmar(intento + 1);
+        }
+        enRevision();
+      } catch (e) {
+        if (intento < MAX_INTENTOS) {
+          await espera(1500 * intento);
+          return confirmar(intento + 1);
+        }
+        box.innerHTML = `<div class="big">⚠️</div><h1>Ups</h1><p>No pudimos confirmar automáticamente. Si ya pagaste, revisá tu mail en unos minutos o escribinos.</p><a href="/" class="btn btn-ghost">Inicio</a>`;
+      }
+    }
+
+    if (orderId) confirmar();
+    else box.innerHTML = '<div class="big">🤔</div><h1>Orden no encontrada</h1><a href="/" class="btn">Inicio</a>';
+  </script>
+</body>
+</html>

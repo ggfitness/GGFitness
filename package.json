@@ -1,0 +1,19 @@
+{
+  "name": "landing-trainer",
+  "version": "1.0.0",
+  "description": "Landing + tienda para personal trainer con Mercado Pago, mails y panel de notificaciones",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env src/server.js",
+    "dev": "node --watch --env-file-if-exists=.env src/server.js",
+    "check:drive": "node --env-file-if-exists=.env scripts/check-drive.js",
+    "precios": "node --env-file-if-exists=.env scripts/precios.js"
+  },
+  "dependencies": {
+    "@upstash/redis": "^1.34.0",
+    "express": "^4.19.2",
+    "mercadopago": "^2.0.15",
+    "nodemailer": "^6.9.13"
+  }
+}
