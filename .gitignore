@@ -30,13 +30,9 @@ data
 # Carpeta interna de Vercel
 .vercel
 
-# Archivos para correr en LOCAL con Docker (no hacen falta en Vercel)
-Dockerfile
-docker-compose.yml
-.dockerignore
-
-# Documentación y notas (no van en el repo)
+# Documentación y notas: solo va el README, ningún otro .md
 *.md
+!README.md
 
 # Basura del sistema operativo
 .DS_Store

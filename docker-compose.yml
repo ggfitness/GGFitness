@@ -1,0 +1,16 @@
+services:
+  web:
+    build: .
+    container_name: landing-trainer
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      # Estos valores se pueden sobreescribir en el archivo .env
+      PORT: 3000
+      BASE_URL: ${BASE_URL:-http://localhost:3000}
+    volumes:
+      # Persistimos la base de datos JSON aunque se reinicie el contenedor
+      - ./data:/app/data
+    restart: unless-stopped
