@@ -17,7 +17,7 @@ const Cart = {
     const items = this.get();
     const found = items.find((i) => i.id === product.id);
     if (found) found.qty += 1;
-    else items.push({ id: product.id, name: product.name, price: product.price, image: product.image, qty: 1 });
+    else items.push({ id: product.id, name: product.name, price: product.price, photo: product.photo, image: product.image, qty: 1 });
     this.save(items);
     return true;
   },

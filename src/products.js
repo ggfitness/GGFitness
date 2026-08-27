@@ -40,7 +40,7 @@ module.exports = [
     image: '🧠',
     // Foto del plan (opcional). Poné un archivo en public/img/ y la ruta acá,
     // ej: '/img/mentalidad.jpg'. Si la dejás vacía, se muestra el emoji de arriba.
-    photo: '',
+    photo: '/img/mentalidad.jpeg',
   },
   {
     id: 'pack-recetas-fit',

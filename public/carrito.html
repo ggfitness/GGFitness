@@ -77,7 +77,7 @@
       } else {
         box.innerHTML = items.map((i) => `
           <div class="cart-item">
-            <div class="emoji">${i.image || '🏋️'}</div>
+            <div class="emoji">${i.photo ? `<img src="${i.photo}" alt="${i.name}" loading="lazy" />` : (i.image || '🏋️')}</div>
             <div class="info">
               <h4>${i.name}</h4>
               <div class="u-price">${money(i.price)} c/u</div>
