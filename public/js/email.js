@@ -13,12 +13,14 @@
 //  (Vercel incluye public/** en el bundle, ver vercel.json.)
 //
 //  Qué expone:
-//    emailProblem(valor) -> string con el problema concreto, o null si está bien.
-//                           Bloquea la compra. Es lo que aplica el servidor.
-//    emailHint(valor)    -> string con una sugerencia ("¿quisiste decir...?"),
-//                           o null. NO bloquea: es una corazonada, y equivocarse
-//                           no puede impedirle comprar a alguien con un dominio
-//                           raro pero real.
+//    emailProblem(valor) -> string con el problema concreto de FORMATO, o null
+//                           si está bien escrito. No mira de qué proveedor es.
+//    gmailProblem(valor) -> string si el email está bien escrito pero no es de
+//                           Gmail, o null. La entrega necesita una cuenta de
+//                           Google, así que esto también frena la compra.
+//    deliveryEmailProblem(valor)
+//                        -> los dos controles juntos: es LO QUE SE EXIGE para
+//                           poder comprar, y es lo que aplica el servidor.
 //    validEmail(valor)   -> true/false (atajo de emailProblem === null).
 //
 //  El email es la dirección de ENTREGA del material, no un dato de contacto
@@ -44,34 +46,21 @@
   var CHAR_LOCAL = /[A-Za-z0-9!#$%&'*+\/=?^_`{|}~.-]/;
   var CHAR_DOMINIO = /[A-Za-z0-9.-]/;
 
-  // Errores de tipeo frecuentes. Solo se usan para SUGERIR, nunca para
-  // rechazar: "gmail.co" es un dominio real de Colombia y bloquearlo sería
-  // impedirle comprar a alguien por una corazonada nuestra.
-  var TYPOS = {
+  // Errores de tipeo que apuntan a Gmail. Solo se usan para CORREGIR el
+  // mensaje ("¿quisiste decir...?"): quién entra y quién no lo decide
+  // DOMINIOS_GOOGLE, unas líneas más abajo.
+  var TYPOS_GMAIL = {
     'gmail.co': 'gmail.com',
     'gmail.con': 'gmail.com',
     'gmail.cm': 'gmail.com',
     'gmail.om': 'gmail.com',
     'gmail.copm': 'gmail.com',
+    'gmail.comm': 'gmail.com',
     'gmial.com': 'gmail.com',
     'gmai.com': 'gmail.com',
     'gnail.com': 'gmail.com',
-    'gmail.comm': 'gmail.com',
-    'hotmail.con': 'hotmail.com',
-    'hotmail.co': 'hotmail.com',
-    'hotmial.com': 'hotmail.com',
-    'hotmai.com': 'hotmail.com',
-    'hotmail.comm': 'hotmail.com',
-    'homail.com': 'hotmail.com',
-    'outlook.con': 'outlook.com',
-    'outlok.com': 'outlook.com',
-    'outllok.com': 'outlook.com',
-    'yahoo.con': 'yahoo.com',
-    'yaho.com': 'yahoo.com',
-    'yahooo.com': 'yahoo.com',
-    'icloud.con': 'icloud.com',
-    'iclould.com': 'icloud.com',
-    'live.con': 'live.com',
+    'gmail.cl': 'gmail.com',
+    'gmaill.com': 'gmail.com',
   };
 
   function primerCaracterInvalido(texto, permitidos) {
@@ -145,32 +134,56 @@
     return null;
   }
 
-  // Sugerencia amable para los errores de tipeo típicos. Solo tiene sentido
-  // sobre un email que YA es válido: no bloquea nada.
-  function emailHint(valor) {
+  // Solo Gmail: el material se entrega dándole permiso de lectura sobre la
+  // carpeta de Drive, y ese permiso se le da a una CUENTA DE GOOGLE. Con un
+  // mail de Hotmail/Outlook/Yahoo el cobro saldría bien y el comprador no
+  // podría abrir nada: cobrar algo que no se puede entregar es la peor forma
+  // de fallar, así que se frena antes de pagar y no después.
+  var DOMINIOS_GOOGLE = { 'gmail.com': 1, 'googlemail.com': 1 };
+
+  // Devuelve por qué ese email no sirve para la entrega, o null si sirve.
+  // Asume un email bien escrito: del formato se ocupa emailProblem().
+  function gmailProblem(valor) {
     var email = String(valor == null ? '' : valor).trim();
     if (!email || emailProblem(email)) return null;
 
     var partes = email.split('@');
     var local = partes[0];
     var dominio = partes[1].toLowerCase();
+    if (DOMINIOS_GOOGLE[dominio]) return null;
 
-    var correcto = TYPOS[dominio];
-    if (correcto) return '¿Quisiste decir ' + local + '@' + correcto + '?';
-    return null;
+    // Si parece un Gmail mal tipeado, lo útil no es explicarle la regla sino
+    // mostrarle el mail ya corregido.
+    if (TYPOS_GMAIL[dominio]) {
+      return '¿Quisiste decir ' + local + '@' + TYPOS_GMAIL[dominio] + '?';
+    }
+    return 'Tiene que ser un Gmail: el material se entrega por Google Drive y con '
+      + dominio + ' no vas a poder abrirlo.';
+  }
+
+  // Todo lo que se exige para poder comprar, en un solo lugar: que el email
+  // esté bien escrito Y que sea de Gmail.
+  function deliveryEmailProblem(valor) {
+    return emailProblem(valor) || gmailProblem(valor);
   }
 
   function validEmail(valor) {
     return emailProblem(valor) === null;
   }
 
-  var api = { emailProblem: emailProblem, emailHint: emailHint, validEmail: validEmail };
+  var api = {
+    emailProblem: emailProblem,
+    gmailProblem: gmailProblem,
+    deliveryEmailProblem: deliveryEmailProblem,
+    validEmail: validEmail,
+  };
 
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = api; // servidor (CommonJS)
   } else {
     raiz.emailProblem = emailProblem; // navegador
-    raiz.emailHint = emailHint;
+    raiz.gmailProblem = gmailProblem;
+    raiz.deliveryEmailProblem = deliveryEmailProblem;
     raiz.validEmail = validEmail;
   }
 })(typeof globalThis !== 'undefined' ? globalThis : this);

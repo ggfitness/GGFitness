@@ -46,7 +46,7 @@ const Cart = {
 
 const money = (n) => '$' + Number(n).toLocaleString('es-AR');
 
-// La validación del email (validEmail / emailProblem / emailHint) vive en
+// La validación del email (emailProblem / gmailProblem / deliveryEmailProblem) vive en
 // /js/email.js, que es EL MISMO archivo que usa el servidor. Cargalo antes que
 // este script en cualquier página que valide un formulario.
 

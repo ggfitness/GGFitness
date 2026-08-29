@@ -369,12 +369,56 @@ section[id] { scroll-margin-top: 128px; }
    El mensaje va DEBAJO del input y queda a la vista mientras se corrige (un
    toast desaparece justo cuando lo necesitas). Dos tonos:
      .error -> hay que corregirlo para poder seguir; el borde tambien se marca.
-     .hint  -> sugerencia (ej: "quisiste decir gmail.com?"); no bloquea nada. */
+     .hint  -> aviso que no frena nada (hoy no se usa en el carrito: para pagar,
+               el mail tiene que ser un Gmail, y eso es un .error). */
 .field-msg { display: none; margin: 6px 0 0; font-size: .82rem; line-height: 1.45; }
 .field-msg.show { display: block; }
 .field-msg.error { color: var(--error); }
 .field-msg.hint { color: var(--brand-2); }
 .field input.invalid, .field input.invalid:focus { border-color: var(--error); }
+
+/* ---- Info de un campo: boton "i" + globo ----
+   El dato importa (sin Gmail no hay entrega) pero no necesita estar siempre
+   abierto ocupando el resumen: queda en un icono y se abre al tocarlo.
+   El globo se posiciona contra .field-head, asi que ocupa el ancho del campo y
+   nunca se sale de la tarjeta en un telefono. */
+.field-head { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; position: relative; }
+.field-head label { margin-bottom: 0; }
+.info-btn {
+  margin-left: auto; flex-shrink: 0;
+  width: 20px; height: 20px; padding: 0; border-radius: 50%;
+  border: 1px solid rgba(var(--brand-rgb), .55); background: transparent;
+  color: var(--brand-2); font: 800 .72rem/1 var(--font); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.info-btn:hover,
+.info-btn[aria-expanded="true"] { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
+.info-btn:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.info-pop {
+  /* Abre hacia ARRIBA: el input esta justo debajo del label y taparle el campo
+     al comprador mientras escribe es peor que tapar el total un segundo. */
+  position: absolute; z-index: 6; bottom: calc(100% + 8px); left: 0; right: 0;
+  display: flex; gap: 9px; padding: 12px 13px;
+  background: var(--card-2); border: 1px solid rgba(var(--brand-rgb), .4);
+  border-radius: 12px; box-shadow: var(--shadow);
+  font-size: .82rem; line-height: 1.45; font-weight: 400; color: var(--text);
+  animation: info-pop-in .14s ease-out;
+}
+/* Sin esto el globo queda SIEMPRE abierto: el display:flex de arriba le gana al
+   display:none que el navegador le pone al atributo [hidden]. */
+.info-pop[hidden] { display: none; }
+/* pico apuntando al boton, que esta pegado al borde derecho del campo */
+.info-pop::before {
+  content: ""; position: absolute; bottom: -6px; right: 6px; width: 10px; height: 10px;
+  background: var(--card-2); transform: rotate(45deg);
+  border-right: 1px solid rgba(var(--brand-rgb), .4);
+  border-bottom: 1px solid rgba(var(--brand-rgb), .4);
+}
+.info-pop .ico { flex-shrink: 0; }
+.info-pop strong { color: var(--brand-2); font-weight: 700; }
+@keyframes info-pop-in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .info-pop { animation: none; } }
 
 /* ---- Formulario de admisión (plan personalizado) ---- */
 .form-card { max-width: 720px; margin: 0 auto; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; }
