@@ -98,7 +98,7 @@ module.exports = [
     ],
     price: 12000,
     image: '🦵',
-    photo: '/img/full-body.jpg',
+    photo: '/img/inferior.jpeg',
   },
   {
     id: 'pack-rutinas-tren-superior',
@@ -124,7 +124,7 @@ module.exports = [
     ],
     price: 12000,
     image: '💪',
-    photo: '',
+    photo: '/img/superior.jpeg',
   },
   {
     id: 'entrenamiento-personalizado-online',
@@ -152,7 +152,9 @@ module.exports = [
     currency: 'ARS', // 'USD' o 'ARS'
     period: 'mes', // etiqueta de precio (ej: /mes). Dejá null si es pago único.
     image: '🏆',
-    photo: '/img/personalizado.jpg',
+    photo: '/img/personalizados-logo.jpeg',
+    // El logo no se recorta: se muestra entero y centrado en la card.
+    photoFit: 'contain',
     // El único camino de compra: se consulta por WhatsApp.
     // El link lo arma el servidor con WHATSAPP_NUMBER (ver .env.example).
     whatsapp: true,
@@ -188,7 +190,9 @@ module.exports = [
     currency: 'ARS', // 'USD' o 'ARS'
     period: 'mes', // etiqueta de precio (ej: /mes). Dejá null si es pago único.
     image: '🤝',
-    photo: '/img/personalizado.jpg',
+    photo: '/img/personalizados-logo.jpeg',
+    // El logo no se recorta: se muestra entero y centrado en la card.
+    photoFit: 'contain',
     // El único camino de compra: se consulta por WhatsApp.
     whatsapp: true,
     // No se vende por la web: primero se habla por WhatsApp y el pago se
@@ -229,7 +233,9 @@ module.exports = [
     // (ver resolveCart en src/server.js).
     soloConsulta: true,
     image: '📅',
-    photo: '/img/personalizado.jpg',
+    photo: '/img/personalizados-logo.jpeg',
+    // El logo no se recorta: se muestra entero y centrado en la card.
+    photoFit: 'contain',
   },
   {
     id: 'plan-6-meses',
@@ -264,6 +270,8 @@ module.exports = [
     // (ver resolveCart en src/server.js).
     soloConsulta: true,
     image: '🏅',
-    photo: '/img/personalizado.jpg',
+    photo: '/img/personalizados-logo.jpeg',
+    // El logo no se recorta: se muestra entero y centrado en la card.
+    photoFit: 'contain',
   },
 ];

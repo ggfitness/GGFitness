@@ -93,7 +93,7 @@
         <div class="container">
           <a href="/#planes" class="back-link">← Volver a los planes</a>
           <div class="about">
-            <div class="photo">${p.photo ? `<img src="${p.photo}" alt="${p.name}" />` : (p.image || '🏋️')}</div>
+            <div class="photo${fitClass(p)}">${p.photo ? `<img src="${p.photo}" alt="${p.name}"${p.photoPos ? ` style="object-position:${p.photoPos}"` : ''} />` : (p.image || '🏋️')}</div>
             <div>
               <span class="section-tag">Plan</span>
               <h1 class="display" style="margin:12px 0 14px; font-size:clamp(2rem,5vw,3.4rem);">${formatName(p.name)}</h1>

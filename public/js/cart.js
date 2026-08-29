@@ -76,13 +76,19 @@ function formatPrice(p) {
   return `${main} <small>${unit}</small>`;
 }
 
-// En los packs, el nombre entero va en mayuscula: "PACK" en blanco y el resto
-// en rosa. Los productos que no arrancan con "Pack" se muestran tal cual.
+// Todos los nombres van en mayuscula: la primera palabra ("PACK",
+// "ENTRENAMIENTO", "PLAN"...) en blanco y el resto en rosa.
 function formatName(name) {
-  const m = /^(Pack)\s+(.+)$/i.exec(name);
+  const m = /^(\S+)\s+(.+)$/.exec(String(name || '').trim());
   return m
     ? `<span class="pack-name">${m[1]} <span class="name-hl">${m[2]}</span></span>`
-    : name;
+    : `<span class="pack-name">${name}</span>`;
+}
+
+// Con photoFit: 'contain' la foto entra entera y centrada; sin photoFit se
+// recorta para llenar el recuadro, como siempre.
+function fitClass(p) {
+  return p.photoFit === 'contain' ? ' fit-contain' : '';
 }
 
 function renderProducts(products, grid) {
@@ -94,8 +100,12 @@ function renderProducts(products, grid) {
 
   grid.innerHTML = products.map((p, i) => {
     const url = '/producto.html?id=' + encodeURIComponent(p.id);
+    // photoPos y photoFit (opcionales, se definen en src/products.js) ajustan
+    // como entra la foto en la card: photoPos corre el encuadre del recorte y
+    // photoFit: 'contain' muestra la imagen entera, centrada y sin cortes.
+    const pos = p.photoPos ? ` style="object-position:${p.photoPos}"` : '';
     const thumb = p.photo
-      ? `<img src="${p.photo}" alt="${p.name}" loading="lazy" />`
+      ? `<img src="${p.photo}" alt="${p.name}" loading="lazy"${pos} />`
       : (p.image || '🏋️');
     const note = p.soloConsulta
       ? 'Coordinás todo por WhatsApp'
@@ -111,7 +121,7 @@ function renderProducts(products, grid) {
     return `
       <div class="product ${i === featuredIdx ? 'featured' : ''}" data-href="${url}">
         ${i === featuredIdx ? '<span class="badge-top">⭐ Más elegido</span>' : ''}
-        <a class="thumb thumb-link" href="${url}">${thumb}</a>
+        <a class="thumb thumb-link${fitClass(p)}" href="${url}">${thumb}</a>
         <div class="body">
           <h3>${formatName(p.name)}</h3>
           <p class="desc">${p.tagline || p.description || ''}</p>
