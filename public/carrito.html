@@ -44,8 +44,22 @@
               <p class="field-msg" id="name-msg" role="alert"></p>
             </div>
             <div class="field">
-              <label for="email">Tu email (donde recibís el material)</label>
-              <input id="email" type="email" placeholder="tucorreo@mail.com"
+              <div class="field-head">
+                <label for="email">Tu Gmail (donde recibís el material)</label>
+                <!-- Por qué el material se entrega solo a un Gmail. Es un dato que
+                     hace falta una vez, así que vive en el botón y no ocupa lugar
+                     en el resumen hasta que lo tocan. -->
+                <button type="button" class="info-btn" id="email-info-btn"
+                        aria-expanded="false" aria-controls="email-info"
+                        aria-label="Por qué tiene que ser un Gmail">i</button>
+                <div class="info-pop" id="email-info" role="note" hidden>
+                  <span class="ico" aria-hidden="true">📩</span>
+                  <span>Poné una dirección de <strong>Gmail</strong>: el material se entrega por
+                    <strong>Google Drive</strong> y se abre con una cuenta de Google. Con Hotmail,
+                    Outlook o Yahoo no vas a poder abrirlo.</span>
+                </div>
+              </div>
+              <input id="email" type="email" placeholder="tunombre@gmail.com"
                      autocomplete="email" inputmode="email" spellcheck="false"
                      aria-describedby="email-msg" />
               <p class="field-msg" id="email-msg" role="alert"></p>
@@ -54,7 +68,7 @@
 
           <button class="btn btn-block" id="pay">Pagar con Mercado Pago</button>
           <p style="color:var(--muted); font-size:.82rem; text-align:center; margin-top:12px;">
-            Pago seguro. Recibís tu material por mail al aprobarse.
+            Pago seguro. Apenas se aprueba, te llega el acceso a tu Gmail.
           </p>
         </div>
       </div>
@@ -185,7 +199,7 @@
     //  mensaje dice qué corregir (falta el @, sobra un carácter, etc.) y aparece
     //  apenas sale del campo.
     //
-    //  emailProblem / emailHint vienen de /js/email.js, el MISMO archivo que
+    //  emailProblem / gmailProblem vienen de /js/email.js, el MISMO archivo que
     //  usa el servidor: el mensaje que se ve acá es el que se aplica allá.
     const nameInput = document.getElementById('name');
     const emailInput = document.getElementById('email');
@@ -219,11 +233,44 @@
         pintar(emailInput, emailMsg, problema, 'error');
         return false;
       }
-      // Sin error: puede haber una sugerencia por un error de tipeo típico
-      // (ej: gmail.con). No bloquea: solo avisa.
-      pintar(emailInput, emailMsg, emailHint(emailInput.value) || '', 'hint');
+      // Bien escrito, pero para la entrega no alcanza: tiene que ser un Gmail
+      // (el material es una carpeta de Drive compartida con su cuenta de Google).
+      // gmailProblem ya devuelve la corrección cuando parece un Gmail mal tipeado.
+      const faltaGmail = gmailProblem(emailInput.value);
+      if (faltaGmail) {
+        pintar(emailInput, emailMsg, faltaGmail, 'error');
+        return false;
+      }
+      pintar(emailInput, emailMsg, '', 'error');
       return true;
     }
+
+    // Globo de info del email: se abre con el botón y se cierra como espera
+    // cualquiera (tocando afuera, con Escape o volviendo a tocar el botón).
+    const infoBtn = document.getElementById('email-info-btn');
+    const infoPop = document.getElementById('email-info');
+
+    function mostrarInfo(abrir) {
+      infoPop.hidden = !abrir;
+      infoBtn.setAttribute('aria-expanded', abrir ? 'true' : 'false');
+    }
+
+    infoBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // si no, el listener de abajo lo cierra al instante
+      mostrarInfo(infoPop.hidden);
+    });
+    document.addEventListener('click', (e) => {
+      if (!infoPop.hidden && !infoPop.contains(e.target)) mostrarInfo(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !infoPop.hidden) {
+        mostrarInfo(false);
+        infoBtn.focus(); // el foco vuelve de donde salió
+      }
+    });
+    // Si se pone a escribir el mail, el globo ya cumplió: se va solo para no
+    // quedar flotando sobre el resumen.
+    emailInput.addEventListener('focus', () => mostrarInfo(false));
 
     nameInput.addEventListener('blur', () => { tocado.name = true; revisarNombre(); });
     emailInput.addEventListener('blur', () => { tocado.email = true; revisarEmail(); });

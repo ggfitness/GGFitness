@@ -14,7 +14,7 @@ const { limit } = require('./ratelimit');
 // Validación del email. Vive en public/ porque el MISMO archivo lo carga el
 // navegador: así el mensaje que ve el comprador y el que aplica el servidor no
 // pueden diferir. Ver el encabezado de public/js/email.js.
-const { emailProblem } = require('../public/js/email.js');
+const { deliveryEmailProblem } = require('../public/js/email.js');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -232,9 +232,12 @@ app.post('/api/checkout', limitCheckout, async (req, res) => {
     if (!nombre) {
       return res.status(400).json({ error: 'Escribí tu nombre.', field: 'name' });
     }
-    // El mensaje dice QUÉ está mal (falta el @, hay un carácter que no va, etc.)
-    // en vez de un "email inválido" que no le sirve a nadie para corregirlo.
-    const problemaEmail = emailProblem(email);
+    // El mensaje dice QUÉ está mal: falta el @, hay un carácter que no va, no es
+    // un Gmail... en vez de un "email inválido" que no le sirve a nadie para
+    // corregirlo. Incluye la exigencia de Gmail: la entrega es un permiso sobre
+    // una carpeta de Drive, así que sin cuenta de Google no hay nada que entregar
+    // y este es el último punto donde frenarlo sale gratis.
+    const problemaEmail = deliveryEmailProblem(email);
     if (problemaEmail) {
       return res.status(400).json({ error: problemaEmail, field: 'email' });
     }
