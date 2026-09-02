@@ -136,6 +136,8 @@ module.exports = [
       'Escribime por WhatsApp y armamos tu rutina y tu alimentación a medida. Después seguimos todo ' +
       'desde la app: ahí tenés tus rutinas, cargás cada serie y vemos tu progreso los dos.',
     includes: [
+      'Pack Mentalidad',
+      'Pack Recetas FIT',
       'Plan personalizado',
       'Nutrición',
       'Seguimiento en la app',
@@ -209,6 +211,8 @@ module.exports = [
       'Un plan de 3 meses para que el cambio se sostenga: entrenamiento y nutrición personalizados, ' +
       'con ajustes mes a mes según cómo vas progresando.',
     includes: [
+      'Pack Mentalidad',
+      'Pack Recetas FIT',
       'Plan de entrenamiento personalizado',
       'Plan de nutrición personalizado',
       'Seguimiento en la app',
@@ -246,6 +250,8 @@ module.exports = [
       'El plan más largo y el de mejor valor por mes: 6 meses de entrenamiento y nutrición ' +
       'personalizados, con ajustes continuos.',
     includes: [
+      'Pack Mentalidad',
+      'Pack Recetas FIT',
       'Plan de entrenamiento personalizado',
       'Plan de nutrición personalizado',
       'Seguimiento en la app',
