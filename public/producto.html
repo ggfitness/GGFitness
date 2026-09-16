@@ -95,7 +95,6 @@
           <div class="about">
             <div class="photo${fitClass(p)}">${p.photo ? `<img src="${p.photo}" alt="${p.name}"${p.photoPos ? ` style="object-position:${p.photoPos}"` : ''} />` : (p.image || '🏋️')}</div>
             <div>
-              <span class="section-tag">Plan</span>
               <h1 class="display" style="margin:12px 0 14px; font-size:clamp(2rem,5vw,3.4rem);">${formatName(p.name)}</h1>
               <p class="sub" style="text-align:left;">${p.tagline || p.description || ''}</p>
               <div class="price" style="font-family:var(--font-display); font-size:2.6rem; margin:20px 0 4px;">${priceHtml(p)}</div>

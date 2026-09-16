@@ -128,7 +128,7 @@ module.exports = [
   },
   {
     id: 'entrenamiento-personalizado-online',
-    name: 'Entrenamiento Personalizado Online',
+    name: 'Plan personalizado Online',
     description: 'Plan personalizado + nutrición + seguimiento en la app, 100% online.',
     tagline: 'Tu plan de entrenamiento y nutrición a medida, con seguimiento en la app.',
     details:
@@ -204,7 +204,7 @@ module.exports = [
   },
   {
     id: 'plan-3-meses',
-    name: 'Plan x 3 Meses',
+    name: 'Plan x 3 Meses (online)',
     description: 'Acompañamiento personalizado durante 3 meses, con seguimiento continuo.',
     tagline: 'Tres meses de acompañamiento para consolidar el cambio.',
     details:
@@ -227,7 +227,7 @@ module.exports = [
       'Preferís pagar el período completo',
       'Necesitás acompañamiento sostenido',
     ],
-    price: 280000,
+    price: 250000,
     currency: 'ARS',
     period: null, // pago único por el período completo
     // El único camino de compra: se consulta por WhatsApp.
@@ -243,7 +243,7 @@ module.exports = [
   },
   {
     id: 'plan-6-meses',
-    name: 'Plan x 6 Meses',
+    name: 'Plan x 6 Meses (online)',
     description: 'Acompañamiento personalizado durante 6 meses, con seguimiento continuo.',
     tagline: 'Seis meses de acompañamiento para una transformación completa.',
     details:
@@ -266,7 +266,7 @@ module.exports = [
       'Estás decidido/a a comprometerte',
       'Preferís no renovar mes a mes',
     ],
-    price: 550000,
+    price: 400000,
     currency: 'ARS',
     period: null, // pago único por el período completo
     // El único camino de compra: se consulta por WhatsApp.
