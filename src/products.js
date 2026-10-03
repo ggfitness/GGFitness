@@ -150,7 +150,7 @@ module.exports = [
       'Preferís entrenar desde donde estés',
       'Querés seguimiento cercano, con todo registrado',
     ],
-    price: 100000,
+    price: 80000,
     currency: 'ARS', // 'USD' o 'ARS'
     period: 'mes', // etiqueta de precio (ej: /mes). Dejá null si es pago único.
     image: '🏆',
@@ -227,7 +227,7 @@ module.exports = [
       'Preferís pagar el período completo',
       'Necesitás acompañamiento sostenido',
     ],
-    price: 250000,
+    price: 220000,
     currency: 'ARS',
     period: null, // pago único por el período completo
     // El único camino de compra: se consulta por WhatsApp.
@@ -266,7 +266,7 @@ module.exports = [
       'Estás decidido/a a comprometerte',
       'Preferís no renovar mes a mes',
     ],
-    price: 400000,
+    price: 420000,
     currency: 'ARS',
     period: null, // pago único por el período completo
     // El único camino de compra: se consulta por WhatsApp.
